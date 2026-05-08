@@ -4,9 +4,10 @@ import { AppService } from './app.service'
 import { TasksModule } from './tasks/tasks.module'
 import { StudySessionsModule } from './study-sessions/study-sessions.module';
 import { StreakModule } from './streak/streak.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
-  imports: [TasksModule, StudySessionsModule, StreakModule],
+  imports: [TasksModule, StudySessionsModule, StreakModule, ReviewsModule],
   controllers: [AppController],
   providers: [AppService],
 })
