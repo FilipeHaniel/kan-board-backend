@@ -6,6 +6,11 @@ import { StudySessionsModule } from './study-sessions/study-sessions.module'
 import { StreakModule } from './streak/streak.module'
 import { ReviewsModule } from './reviews/reviews.module'
 import { PrismaModule } from './prisma/prisma.module'
+import { UsersModule } from './users/users.module'
+import { GoalsModule } from './goals/goals.module'
+import { SubjectsModule } from './subjects/subjects.module'
+import { DivisionsModule } from './divisions/divisions.module'
+import { ContentsModule } from './contents/contents.module'
 
 @Module({
   imports: [
@@ -14,6 +19,11 @@ import { PrismaModule } from './prisma/prisma.module'
     StreakModule,
     ReviewsModule,
     PrismaModule,
+    UsersModule,
+    GoalsModule,
+    SubjectsModule,
+    DivisionsModule,
+    ContentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
