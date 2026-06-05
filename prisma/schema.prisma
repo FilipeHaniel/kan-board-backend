@@ -26,6 +26,7 @@ model User {
 model Goal {
   id        String    @id @default(uuid())
   title     String
+  /// Ex: ENEM 2026
   examDate  DateTime?
   userId    String
   user      User      @relation(fields: [userId], references: [id])
@@ -47,6 +48,10 @@ model Subject {
 model Division {
   id        String    @id @default(uuid())
   name      String
+  /// Ex:
+  /// Frente A
+  /// Frente B
+  /// Frente Única
   subjectId String
   subject   Subject   @relation(fields: [subjectId], references: [id])
   contents  Content[]
@@ -56,16 +61,46 @@ model Division {
 
 model Content {
   id         String        @id @default(uuid())
+  /// Ex:
+  /// Funções
+  /// Equações
+  /// Trigonometria
   title      String
+  status     ContentStatus @default(NOT_STARTED)
+  /// Ordem visual dentro da frente
   position   Int           @default(0)
-  status     ContentStatus @default(BACKLOG)
   divisionId String
   division   Division      @relation(fields: [divisionId], references: [id])
+  tasks      Task[]
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 }
 
+model Task {
+  id               String     @id @default(uuid())
+  /// Ex:
+  /// Plano Cartesiano
+  /// Função Afim
+  /// Tipos de Parábola
+  title            String
+  status           TaskStatus @default(BACKLOG)
+  /// Ordem visual dentro da coluna
+  position         Int        @default(0)
+  /// Opcional para planejamento futuro
+  estimatedMinutes Int?
+  contentId        String
+  content          Content    @relation(fields: [contentId], references: [id])
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
 enum ContentStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskStatus {
   BACKLOG
   TODAY
   DONE

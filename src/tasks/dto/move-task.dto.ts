@@ -1,3 +1,12 @@
+import { IsEnum } from 'class-validator'
+
+export enum TaskStatusDto {
+  BACKLOG = 'BACKLOG',
+  TODAY = 'TODAY',
+  DONE = 'DONE',
+}
+
 export class MoveTaskDto {
-  status!: 'backlog' | 'today' | 'done'
+  @IsEnum(TaskStatusDto)
+  status!: TaskStatusDto
 }

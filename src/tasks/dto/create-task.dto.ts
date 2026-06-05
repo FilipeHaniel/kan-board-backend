@@ -1,8 +1,13 @@
-import { IsNotEmpty } from 'class-validator'
+import { IsString, IsOptional, IsInt } from 'class-validator'
 
 export class CreateTaskDto {
-  @IsNotEmpty()
+  @IsString()
   title!: string
-  subject!: string
-  division!: string
+
+  @IsString()
+  contentId!: string
+
+  @IsOptional()
+  @IsInt()
+  estimatedMinutes?: number
 }

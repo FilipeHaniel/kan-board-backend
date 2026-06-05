@@ -26,11 +26,6 @@ export class ContentsController {
     return this.contentsService.findAll()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contentsService.findOne(id)
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
     return this.contentsService.update(id, updateContentDto)
@@ -41,21 +36,13 @@ export class ContentsController {
     return this.contentsService.remove(id)
   }
 
-  @Patch(':id/move')
-  move(
-    @Param('id') id: string,
-    @Body('status') status: 'BACKLOG' | 'TODAY' | 'DONE',
-  ) {
-    return this.contentsService.move(id, status)
-  }
-
   @Get('/division/:divisionId')
   findByDivision(@Param('divisionId') divisionId: string) {
     return this.contentsService.findByDivision(divisionId)
   }
 
-  @Patch(':id/reorder')
-  reorder(@Param('id') id: string, @Body('position') position: number) {
-    return this.contentsService.reorder(id, position)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.contentsService.findOne(id)
   }
 }

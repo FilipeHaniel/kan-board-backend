@@ -1,28 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateContentDto } from './dto/create-content.dto'
 import { UpdateContentDto } from './dto/update-content.dto'
+import { ContentStatus } from '@prisma/client'
 
 @Injectable()
 export class ContentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateContentDto) {
-    const divisionExists = await this.prisma.division.findUnique({
-      where: {
-        id: dto.divisionId,
-      },
-    })
-
-    if (!divisionExists) {
-      throw new NotFoundException('Division not found')
-    }
-
     return this.prisma.content.create({
       data: {
         title: dto.title,
-        status: dto.status ?? 'BACKLOG',
         divisionId: dto.divisionId,
+        status: dto.status,
       },
     })
   }
@@ -30,15 +21,8 @@ export class ContentsService {
   async findAll() {
     return this.prisma.content.findMany({
       include: {
-        division: {
-          include: {
-            subject: {
-              include: {
-                goal: true,
-              },
-            },
-          },
-        },
+        division: true,
+        tasks: true,
       },
       orderBy: {
         position: 'asc',
@@ -47,51 +31,11 @@ export class ContentsService {
   }
 
   async findOne(id: string) {
-    const content = await this.prisma.content.findUnique({
+    return this.prisma.content.findUnique({
       where: { id },
       include: {
-        division: {
-          include: {
-            subject: true,
-          },
-        },
-      },
-    })
-
-    if (!content) {
-      throw new NotFoundException('Content not found')
-    }
-
-    return content
-  }
-
-  async update(id: string, dto: UpdateContentDto) {
-    await this.findOne(id)
-
-    return this.prisma.content.update({
-      where: { id },
-      data: {
-        title: dto.title,
-        status: dto.status,
-      },
-    })
-  }
-
-  async remove(id: string) {
-    await this.findOne(id)
-
-    return this.prisma.content.delete({
-      where: { id },
-    })
-  }
-
-  async move(id: string, status: 'BACKLOG' | 'TODAY' | 'DONE') {
-    await this.findOne(id)
-
-    return this.prisma.content.update({
-      where: { id },
-      data: {
-        status,
+        division: true,
+        tasks: true,
       },
     })
   }
@@ -101,21 +45,54 @@ export class ContentsService {
       where: {
         divisionId,
       },
+      include: {
+        tasks: true,
+      },
       orderBy: {
         position: 'asc',
       },
     })
   }
 
-  async reorder(id: string, position: number) {
-    await this.findOne(id)
+  async update(id: string, dto: UpdateContentDto) {
+    return this.prisma.content.update({
+      where: { id },
+      data: dto,
+    })
+  }
+
+  async remove(id: string) {
+    return this.prisma.content.delete({
+      where: { id },
+    })
+  }
+
+  async updateStatusFromTasks(contentId: string) {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        contentId,
+      },
+    })
+
+    const total = tasks.length
+    const done = tasks.filter((task) => task.status === 'DONE').length
+
+    let status: ContentStatus = ContentStatus.NOT_STARTED
+
+    if (done > 0) {
+      status = ContentStatus.IN_PROGRESS
+    }
+
+    if (done === total && total > 0) {
+      status = ContentStatus.DONE
+    }
 
     return this.prisma.content.update({
       where: {
-        id,
+        id: contentId,
       },
       data: {
-        position,
+        status,
       },
     })
   }
