@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDivisionDto } from './dto/create-division.dto';
-import { UpdateDivisionDto } from './dto/update-division.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateDivisionDto } from './dto/create-division.dto'
+import { PrismaService } from '@/prisma/prisma.service'
 
 @Injectable()
 export class DivisionsService {
-  create(createDivisionDto: CreateDivisionDto) {
-    return 'This action adds a new division';
+  constructor(private readonly prisma: PrismaService) {}
+
+  create(dto: CreateDivisionDto) {
+    return this.prisma.division.create({
+      data: {
+        name: dto.name,
+        subject: {
+          connect: {
+            id: dto.subjectId,
+          },
+        },
+      },
+    })
   }
 
   findAll() {
-    return `This action returns all divisions`;
+    return this.prisma.division.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} division`;
+  findOne(id: string) {
+    return this.prisma.division.findUnique({
+      where: { id },
+    })
   }
 
-  update(id: number, updateDivisionDto: UpdateDivisionDto) {
-    return `This action updates a #${id} division`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} division`;
+  remove(id: string) {
+    return this.prisma.division.delete({
+      where: { id },
+    })
   }
 }

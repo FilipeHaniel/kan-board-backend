@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { DivisionsService } from './divisions.service';
-import { CreateDivisionDto } from './dto/create-division.dto';
-import { UpdateDivisionDto } from './dto/update-division.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common'
+import { DivisionsService } from './divisions.service'
+import { CreateDivisionDto } from './dto/create-division.dto'
+import { UpdateDivisionDto } from './dto/update-division.dto'
 
 @Controller('divisions')
 export class DivisionsController {
@@ -9,26 +17,21 @@ export class DivisionsController {
 
   @Post()
   create(@Body() createDivisionDto: CreateDivisionDto) {
-    return this.divisionsService.create(createDivisionDto);
+    return this.divisionsService.create(createDivisionDto)
   }
 
   @Get()
   findAll() {
-    return this.divisionsService.findAll();
+    return this.divisionsService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.divisionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDivisionDto: UpdateDivisionDto) {
-    return this.divisionsService.update(+id, updateDivisionDto);
+    return this.divisionsService.findOne(id)
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.divisionsService.remove(+id);
+    return this.divisionsService.remove(id)
   }
 }
