@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateContentDto } from './dto/create-content.dto'
 import { UpdateContentDto } from './dto/update-content.dto'
-import { ContentStatus } from '@prisma/client'
+import { ContentStatus, TaskStatus } from '@prisma/client'
 
 @Injectable()
 export class ContentsService {
@@ -75,16 +75,16 @@ export class ContentsService {
     })
 
     const total = tasks.length
-    const done = tasks.filter((task) => task.status === 'DONE').length
+    const done = tasks.filter((task) => task.status === TaskStatus.DONE).length
 
     let status: ContentStatus = ContentStatus.NOT_STARTED
 
-    if (done > 0) {
-      status = ContentStatus.IN_PROGRESS
-    }
-
-    if (done === total && total > 0) {
-      status = ContentStatus.DONE
+    if (total > 0) {
+      if (done === total) {
+        status = ContentStatus.DONE
+      } else if (done > 0) {
+        status = ContentStatus.IN_PROGRESS
+      }
     }
 
     return this.prisma.content.update({

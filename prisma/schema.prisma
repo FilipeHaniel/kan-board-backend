@@ -28,6 +28,7 @@ model Goal {
   title     String
   /// Ex: ENEM 2026
   examDate  DateTime?
+  isActive  Boolean   @default(true)
   userId    String
   user      User      @relation(fields: [userId], references: [id])
   subjects  Subject[]
