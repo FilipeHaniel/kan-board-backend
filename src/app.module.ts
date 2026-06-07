@@ -11,6 +11,7 @@ import { GoalsModule } from './goals/goals.module'
 import { SubjectsModule } from './subjects/subjects.module'
 import { DivisionsModule } from './divisions/divisions.module'
 import { ContentsModule } from './contents/contents.module'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ContentsModule } from './contents/contents.module'
     SubjectsModule,
     DivisionsModule,
     ContentsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,7 +6,7 @@ import { PrismaService } from '@/prisma/prisma.service'
 export class DivisionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateDivisionDto) {
+  async create(dto: CreateDivisionDto) {
     return this.prisma.division.create({
       data: {
         name: dto.name,
@@ -19,17 +19,17 @@ export class DivisionsService {
     })
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.division.findMany()
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.prisma.division.findUnique({
       where: { id },
     })
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.prisma.division.delete({
       where: { id },
     })

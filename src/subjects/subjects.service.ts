@@ -6,7 +6,7 @@ import { PrismaService } from '@/prisma/prisma.service'
 export class SubjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateSubjectDto) {
+  async create(dto: CreateSubjectDto) {
     return this.prisma.subject.create({
       data: {
         name: dto.name,
@@ -19,17 +19,17 @@ export class SubjectsService {
     })
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.subject.findMany()
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.prisma.subject.findUnique({
       where: { id },
     })
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.prisma.subject.delete({
       where: { id },
     })

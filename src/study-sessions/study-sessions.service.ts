@@ -7,7 +7,7 @@ import { StudySession } from './entities/study-session.entity'
 export class StudySessionsService {
   private sessions: StudySession[] = []
 
-  create(dto: CreateStudySessionDto) {
+  async create(dto: CreateStudySessionDto) {
     const now = new Date()
 
     const session: StudySession = {
@@ -23,7 +23,7 @@ export class StudySessionsService {
     return session
   }
 
-  findAll() {
+  async findAll() {
     return this.sessions
   }
 }

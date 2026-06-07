@@ -6,7 +6,7 @@ import { CreateGoalDto } from './dto/create-goal.dto'
 export class GoalsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateGoalDto) {
+  async create(dto: CreateGoalDto) {
     return this.prisma.goal.create({
       data: {
         title: dto.title,
@@ -21,7 +21,7 @@ export class GoalsService {
     })
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.goal.findMany({
       include: {
         subjects: true,
@@ -29,13 +29,13 @@ export class GoalsService {
     })
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.prisma.goal.findUnique({
       where: { id },
     })
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.prisma.goal.delete({
       where: { id },
     })

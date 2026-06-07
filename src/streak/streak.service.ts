@@ -5,8 +5,8 @@ import { StudySessionsService } from '../study-sessions/study-sessions.service'
 export class StreakService {
   constructor(private readonly studySessionsService: StudySessionsService) {}
 
-  getCurrentStreak() {
-    const sessions = this.studySessionsService.findAll()
+  async getCurrentStreak() {
+    const sessions = await this.studySessionsService.findAll()
 
     const groupedByDay = new Map<string, number>()
 

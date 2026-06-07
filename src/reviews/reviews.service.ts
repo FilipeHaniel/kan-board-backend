@@ -6,7 +6,7 @@ import { Review } from './entities/review.entity'
 export class ReviewsService {
   private reviews: Review[] = []
 
-  createReviewsForTask(taskId: string) {
+  async createReviewsForTask(taskId: string) {
     const now = new Date()
     // const intervals = [1, 7, 30]
     const intervals = [0]
@@ -25,7 +25,7 @@ export class ReviewsService {
     }
   }
 
-  getPendingReviews() {
+  async getPendingReviews() {
     const now = new Date()
 
     return this.reviews.filter(
@@ -33,7 +33,7 @@ export class ReviewsService {
     )
   }
 
-  completeReview(reviewId: string) {
+  async completeReview(reviewId: string) {
     const review = this.reviews.find((r) => r.id === reviewId)
     if (!review) return null
     review.completed = true
