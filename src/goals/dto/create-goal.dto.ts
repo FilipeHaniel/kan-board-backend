@@ -7,7 +7,4 @@ export class CreateGoalDto {
   @IsOptional()
   @IsDateString()
   examDate?: string
-
-  @IsString()
-  userId!: string
 }
