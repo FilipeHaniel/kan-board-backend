@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateSubjectDto } from './dto/create-subject.dto'
 import { PrismaService } from '@/prisma/prisma.service'
 
@@ -6,32 +6,81 @@ import { PrismaService } from '@/prisma/prisma.service'
 export class SubjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateSubjectDto) {
+  async create(dto: CreateSubjectDto, userId: string) {
+    const goal = await this.prisma.goal.findFirst({
+      where: {
+        id: dto.goalId,
+        userId,
+        isActive: true,
+      },
+    })
+
+    if (!goal) {
+      throw new NotFoundException('Goal not found')
+    }
+
     return this.prisma.subject.create({
       data: {
         name: dto.name,
-        goal: {
-          connect: {
-            id: dto.goalId,
-          },
-        },
+        goalId: dto.goalId,
       },
     })
   }
 
-  async findAll() {
-    return this.prisma.subject.findMany()
-  }
-
-  async findOne(id: string) {
-    return this.prisma.subject.findUnique({
-      where: { id },
+  async findAll(userId: string) {
+    return this.prisma.subject.findMany({
+      where: {
+        goal: {
+          userId,
+          isActive: true,
+        },
+      },
+      include: {
+        goal: true,
+      },
     })
   }
 
-  async remove(id: string) {
+  async findOne(id: string, userId: string) {
+    const subject = await this.prisma.subject.findFirst({
+      where: {
+        id,
+        goal: {
+          userId,
+          isActive: true,
+        },
+      },
+      include: {
+        goal: true,
+      },
+    })
+
+    if (!subject) {
+      throw new NotFoundException('Subject not found')
+    }
+
+    return subject
+  }
+
+  async remove(id: string, userId: string) {
+    const subject = await this.prisma.subject.findFirst({
+      where: {
+        id,
+        goal: {
+          userId,
+          isActive: true,
+        },
+      },
+    })
+
+    if (!subject) {
+      throw new NotFoundException('Subject not found')
+    }
+
     return this.prisma.subject.delete({
-      where: { id },
+      where: {
+        id,
+      },
     })
   }
 }
