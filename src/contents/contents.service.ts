@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateContentDto } from './dto/create-content.dto'
 import { UpdateContentDto } from './dto/update-content.dto'
@@ -8,7 +8,23 @@ import { ContentStatus, TaskStatus } from '@prisma/client'
 export class ContentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateContentDto) {
+  async create(dto: CreateContentDto, userId: string) {
+    const division = await this.prisma.division.findFirst({
+      where: {
+        id: dto.divisionId,
+        subject: {
+          goal: {
+            userId,
+            isActive: true,
+          },
+        },
+      },
+    })
+
+    if (!division) {
+      throw new NotFoundException('Division not found')
+    }
+
     return this.prisma.content.create({
       data: {
         title: dto.title,
@@ -18,8 +34,18 @@ export class ContentsService {
     })
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     return this.prisma.content.findMany({
+      where: {
+        division: {
+          subject: {
+            goal: {
+              userId,
+              isActive: true,
+            },
+          },
+        },
+      },
       include: {
         division: true,
         tasks: true,
@@ -30,20 +56,44 @@ export class ContentsService {
     })
   }
 
-  async findOne(id: string) {
-    return this.prisma.content.findUnique({
-      where: { id },
+  async findOne(id: string, userId: string) {
+    const content = await this.prisma.content.findFirst({
+      where: {
+        id,
+        division: {
+          subject: {
+            goal: {
+              userId,
+              isActive: true,
+            },
+          },
+        },
+      },
       include: {
         division: true,
         tasks: true,
       },
     })
+
+    if (!content) {
+      throw new NotFoundException('Content not found')
+    }
+
+    return content
   }
 
-  async findByDivision(divisionId: string) {
+  async findByDivision(divisionId: string, userId: string) {
     return this.prisma.content.findMany({
       where: {
         divisionId,
+        division: {
+          subject: {
+            goal: {
+              userId,
+              isActive: true,
+            },
+          },
+        },
       },
       include: {
         tasks: true,
@@ -54,16 +104,56 @@ export class ContentsService {
     })
   }
 
-  async update(id: string, dto: UpdateContentDto) {
+  async update(id: string, userId: string, dto: UpdateContentDto) {
+    const content = await this.prisma.content.findFirst({
+      where: {
+        id,
+        division: {
+          subject: {
+            goal: {
+              userId,
+              isActive: true,
+            },
+          },
+        },
+      },
+    })
+
+    if (!content) {
+      throw new NotFoundException('Content not found')
+    }
+
     return this.prisma.content.update({
-      where: { id },
+      where: {
+        id,
+      },
       data: dto,
     })
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    const content = await this.prisma.content.findFirst({
+      where: {
+        id,
+        division: {
+          subject: {
+            goal: {
+              userId,
+              isActive: true,
+            },
+          },
+        },
+      },
+    })
+
+    if (!content) {
+      throw new NotFoundException('Content not found')
+    }
+
     return this.prisma.content.delete({
-      where: { id },
+      where: {
+        id,
+      },
     })
   }
 
