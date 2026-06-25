@@ -21,9 +21,64 @@ export class GoalsService {
     return this.prisma.goal.findMany({
       where: {
         userId,
-        isActive: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     })
+  }
+
+  async findSubjects(goalId: string, userId: string) {
+    await this.findOne(goalId, userId)
+
+    return this.prisma.subject.findMany({
+      where: {
+        goalId,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  }
+
+  async findTasks(goalId: string, userId: string) {
+    await this.findOne(goalId, userId)
+
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        content: {
+          division: {
+            subject: {
+              goalId,
+            },
+          },
+        },
+      },
+      include: {
+        content: {
+          include: {
+            division: {
+              include: {
+                subject: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        position: 'asc',
+      },
+    })
+
+    return tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+
+      content: task.content.title,
+      division: task.content.division.name,
+      subject: task.content.division.subject.name,
+    }))
   }
 
   async findOne(id: string, userId: string) {

@@ -36,6 +36,18 @@ export class GoalsController {
     return this.goalsService.findByUser(user.id)
   }
 
+  @ApiOperation({ summary: 'Find all subjects for the chosen goal' })
+  @Get(':id/subjects')
+  findSubjects(@Param('id') goalId: string, @CurrentUser() user: AuthUser) {
+    return this.goalsService.findSubjects(goalId, user.id)
+  }
+
+  @ApiOperation({ summary: 'Find tasks by the chosen goal' })
+  @Get(':id/tasks')
+  findTasks(@Param('id') goalId: string, @CurrentUser() user: AuthUser) {
+    return this.goalsService.findTasks(goalId, user.id)
+  }
+
   @ApiOperation({ summary: 'Find a goal by ID' })
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: AuthUser) {

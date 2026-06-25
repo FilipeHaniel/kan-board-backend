@@ -33,7 +33,7 @@ export class TasksController {
   }
 
   @ApiOperation({ summary: 'Find all tasks for the current user' })
-  @Get()
+  @Get('/goals/:goalId/tasks')
   findAll(@CurrentUser() user: AuthUser) {
     return this.tasksService.findAll(user.id)
   }

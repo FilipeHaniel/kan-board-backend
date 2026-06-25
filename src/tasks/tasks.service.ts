@@ -42,7 +42,7 @@ export class TasksService {
   }
 
   async findAll(userId: string) {
-    return this.prisma.task.findMany({
+    const tasks = await this.prisma.task.findMany({
       where: {
         content: {
           division: {
@@ -56,12 +56,30 @@ export class TasksService {
         },
       },
       include: {
-        content: true,
+        content: {
+          include: {
+            division: {
+              include: {
+                subject: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         position: 'asc',
       },
     })
+
+    return tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+
+      content: task.content.title,
+      division: task.content.division.name,
+      subject: task.content.division.subject.name,
+    }))
   }
 
   async findOne(id: string, userId: string) {

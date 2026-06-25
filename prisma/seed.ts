@@ -1,5 +1,7 @@
 import { PrismaClient, TaskStatus } from '@prisma/client'
 
+import * as bcrypt from 'bcrypt'
+
 const prisma = new PrismaClient()
 
 async function createContentWithTasks(
@@ -34,11 +36,13 @@ async function createContentWithTasks(
 async function main() {
   console.log('🌱 Seeding database...')
 
+  const passwordHash = await bcrypt.hash('seed-password', 10)
+
   const user = await prisma.user.create({
     data: {
       name: 'Filipe',
       email: 'filipe@email.com',
-      password: 'seed-password',
+      password: passwordHash,
     },
   })
 
