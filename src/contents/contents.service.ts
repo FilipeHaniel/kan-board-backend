@@ -15,7 +15,7 @@ export class ContentsService {
         subject: {
           goal: {
             userId,
-            isActive: true,
+            // isActive: true,
           },
         },
       },
@@ -41,7 +41,7 @@ export class ContentsService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },
@@ -64,7 +64,7 @@ export class ContentsService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },
@@ -90,7 +90,7 @@ export class ContentsService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },
@@ -112,7 +112,7 @@ export class ContentsService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },
@@ -139,7 +139,7 @@ export class ContentsService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },

@@ -12,7 +12,7 @@ export class DivisionsService {
         id: dto.subjectId,
         goal: {
           userId,
-          isActive: true,
+          // isActive: true,
         },
       },
     })
@@ -35,7 +35,7 @@ export class DivisionsService {
         subject: {
           goal: {
             userId,
-            isActive: true,
+            // isActive: true,
           },
         },
       },
@@ -52,7 +52,7 @@ export class DivisionsService {
         subject: {
           goal: {
             userId,
-            isActive: true,
+            // isActive: true,
           },
         },
       },
@@ -75,7 +75,7 @@ export class DivisionsService {
         subject: {
           goal: {
             userId,
-            isActive: true,
+            // isActive: true,
           },
         },
       },

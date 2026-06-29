@@ -15,7 +15,7 @@ export class StreakService {
 
       const current = groupedByDay.get(day) || 0
 
-      groupedByDay.set(day, current + session.durationInMinutes)
+      // groupedByDay.set(day, current + session.durationInMinutes)
     }
 
     const validDays = [...groupedByDay.entries()]

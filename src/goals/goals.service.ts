@@ -113,7 +113,7 @@ export class GoalsService {
         userId,
       },
       data: {
-        isActive: false,
+        // isActive: false,
       },
     })
   }

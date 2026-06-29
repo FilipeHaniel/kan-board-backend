@@ -21,7 +21,7 @@ export class TasksService {
           subject: {
             goal: {
               userId,
-              isActive: true,
+              // isActive: true,
             },
           },
         },
@@ -49,7 +49,7 @@ export class TasksService {
             subject: {
               goal: {
                 userId,
-                isActive: true,
+                // isActive: true,
               },
             },
           },
@@ -91,7 +91,7 @@ export class TasksService {
             subject: {
               goal: {
                 userId,
-                isActive: true,
+                // isActive: true,
               },
             },
           },
@@ -115,7 +115,7 @@ export class TasksService {
             subject: {
               goal: {
                 userId,
-                isActive: true,
+                // isActive: true,
               },
             },
           },

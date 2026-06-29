@@ -11,7 +11,7 @@ export class SubjectsService {
       where: {
         id: dto.goalId,
         userId,
-        isActive: true,
+        // isActive: true,
       },
     })
 
@@ -32,7 +32,7 @@ export class SubjectsService {
       where: {
         goal: {
           userId,
-          isActive: true,
+          // isActive: true,
         },
       },
       include: {
@@ -47,7 +47,7 @@ export class SubjectsService {
         id,
         goal: {
           userId,
-          isActive: true,
+          // isActive: true,
         },
       },
       include: {
@@ -68,7 +68,7 @@ export class SubjectsService {
         id,
         goal: {
           userId,
-          isActive: true,
+          // isActive: true,
         },
       },
     })

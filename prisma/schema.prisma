@@ -24,15 +24,16 @@ model User {
 }
 
 model Goal {
-  id        String    @id @default(uuid())
-  title     String
+  id            String         @id @default(uuid())
+  title         String
   /// Ex: ENEM 2026
-  examDate  DateTime?
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  subjects  Subject[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  examDate      DateTime?
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  subjects      Subject[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  studySessions StudySession[]
 }
 
 model Subject {
@@ -77,21 +78,51 @@ model Content {
 }
 
 model Task {
-  id               String     @id @default(uuid())
+  id                String             @id @default(uuid())
   /// Ex:
   /// Plano Cartesiano
   /// Função Afim
   /// Tipos de Parábola
-  title            String
-  status           TaskStatus @default(BACKLOG)
+  title             String
+  status            TaskStatus         @default(BACKLOG)
   /// Ordem visual dentro da coluna
-  position         Int        @default(0)
+  position          Int                @default(0)
   /// Opcional para planejamento futuro
-  estimatedMinutes Int?
-  contentId        String
-  content          Content    @relation(fields: [contentId], references: [id])
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  estimatedMinutes  Int?
+  contentId         String
+  content           Content            @relation(fields: [contentId], references: [id])
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  studySessionTasks StudySessionTask[]
+}
+
+model StudySession {
+  id         String             @id @default(uuid())
+  /// Goal info
+  goalId     String
+  goal       Goal               @relation(fields: [goalId], references: [id])
+  /// Timer session
+  startedAt  DateTime           @default(now())
+  finishedAt DateTime?
+  createdAt  DateTime           @default(now())
+  /// Tasks feature
+  tasks      StudySessionTask[]
+}
+
+model StudySessionTask {
+  id                String       @id @default(uuid())
+  /// Session info
+  studySessionId    String
+  studySession      StudySession @relation(fields: [studySessionId], references: [id])
+  /// Tasks info
+  taskId            String
+  task              Task         @relation(fields: [taskId], references: [id])
+  /// timer study session
+  completedAt       DateTime?
+  durationInMinutes Int?
+  difficulty        Int?
+  wasInterrupted    Boolean      @default(false)
+  reviewScheduled   Boolean      @default(false)
 }
 
 enum ContentStatus {
