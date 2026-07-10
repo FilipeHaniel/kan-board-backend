@@ -9,12 +9,6 @@ export class CreateGoalDto {
   title!: string
 
   @ApiProperty({
-    example: 'Passar no ENEM 2027',
-  })
-  @IsString()
-  description!: string
-
-  @ApiProperty({
     example: '2027-11-01',
     required: false,
   })

@@ -11,7 +11,7 @@ export class GoalsService {
     return this.prisma.goal.create({
       data: {
         title: dto.title,
-        examDate: dto.examDate,
+        examDate: dto.examDate ? new Date(dto.examDate) : null,
         userId,
       },
     })
