@@ -70,15 +70,80 @@ export class GoalsService {
       },
     })
 
-    return tasks.map((task) => ({
-      id: task.id,
-      title: task.title,
-      status: task.status,
+    const subjectsMap = new Map<
+      string,
+      {
+        id: string
+        name: string
+        divisions: any[]
+      }
+    >()
 
-      content: task.content.title,
-      division: task.content.division.name,
-      subject: task.content.division.subject.name,
-    }))
+    for (const task of tasks) {
+      const subject = task.content.division.subject
+      const division = task.content.division
+      const content = task.content
+
+      // Subject
+      if (!subjectsMap.has(subject.id)) {
+        subjectsMap.set(subject.id, {
+          id: subject.id,
+          name: subject.name,
+          divisions: [],
+        })
+      }
+
+      const subjectNode = subjectsMap.get(subject.id)!
+
+      // Division
+      let divisionNode = subjectNode.divisions.find((d) => d.id === division.id)
+
+      if (!divisionNode) {
+        divisionNode = {
+          id: division.id,
+          name: division.name,
+          contents: [],
+        }
+
+        subjectNode.divisions.push(divisionNode)
+      }
+
+      // Content
+      let contentNode = divisionNode.contents.find((c) => c.id === content.id)
+
+      if (!contentNode) {
+        contentNode = {
+          id: content.id,
+          title: content.title,
+          status: content.status,
+          position: content.position,
+          tasks: [],
+        }
+
+        divisionNode.contents.push(contentNode)
+      }
+
+      // Task
+      contentNode.tasks.push({
+        id: task.id,
+        title: task.title,
+        status: task.status,
+        position: task.position,
+        estimatedMinutes: task.estimatedMinutes,
+      })
+    }
+
+    return [...subjectsMap.values()]
+
+    // return tasks.map((task) => ({
+    //   id: task.id,
+    //   title: task.title,
+    //   status: task.status,
+
+    //   content: task.content.title,
+    //   division: task.content.division.name,
+    //   subject: task.content.division.subject.name,
+    // }))
   }
 
   async findOne(id: string, userId: string) {
