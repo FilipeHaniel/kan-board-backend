@@ -41,109 +41,32 @@ export class GoalsService {
     })
   }
 
-  async findTasks(goalId: string, userId: string) {
+  async findDashboard(goalId: string, userId: string) {
     await this.findOne(goalId, userId)
 
-    const tasks = await this.prisma.task.findMany({
+    return this.prisma.subject.findMany({
       where: {
-        content: {
-          division: {
-            subject: {
-              goalId,
-            },
-          },
-        },
+        goalId,
       },
       include: {
-        content: {
+        divisions: {
           include: {
-            division: {
+            contents: {
+              orderBy: {
+                position: 'asc',
+              },
               include: {
-                subject: true,
+                tasks: {
+                  orderBy: {
+                    position: 'asc',
+                  },
+                },
               },
             },
           },
         },
       },
-      orderBy: {
-        position: 'asc',
-      },
     })
-
-    const subjectsMap = new Map<
-      string,
-      {
-        id: string
-        name: string
-        divisions: any[]
-      }
-    >()
-
-    for (const task of tasks) {
-      const subject = task.content.division.subject
-      const division = task.content.division
-      const content = task.content
-
-      // Subject
-      if (!subjectsMap.has(subject.id)) {
-        subjectsMap.set(subject.id, {
-          id: subject.id,
-          name: subject.name,
-          divisions: [],
-        })
-      }
-
-      const subjectNode = subjectsMap.get(subject.id)!
-
-      // Division
-      let divisionNode = subjectNode.divisions.find((d) => d.id === division.id)
-
-      if (!divisionNode) {
-        divisionNode = {
-          id: division.id,
-          name: division.name,
-          contents: [],
-        }
-
-        subjectNode.divisions.push(divisionNode)
-      }
-
-      // Content
-      let contentNode = divisionNode.contents.find((c) => c.id === content.id)
-
-      if (!contentNode) {
-        contentNode = {
-          id: content.id,
-          title: content.title,
-          status: content.status,
-          position: content.position,
-          tasks: [],
-        }
-
-        divisionNode.contents.push(contentNode)
-      }
-
-      // Task
-      contentNode.tasks.push({
-        id: task.id,
-        title: task.title,
-        status: task.status,
-        position: task.position,
-        estimatedMinutes: task.estimatedMinutes,
-      })
-    }
-
-    return [...subjectsMap.values()]
-
-    // return tasks.map((task) => ({
-    //   id: task.id,
-    //   title: task.title,
-    //   status: task.status,
-
-    //   content: task.content.title,
-    //   division: task.content.division.name,
-    //   subject: task.content.division.subject.name,
-    // }))
   }
 
   async findOne(id: string, userId: string) {

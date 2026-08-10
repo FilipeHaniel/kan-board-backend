@@ -31,6 +31,9 @@ export class ContentsService {
         divisionId: dto.divisionId,
         status: dto.status,
       },
+      include: {
+        tasks: true,
+      },
     })
   }
 

@@ -43,9 +43,9 @@ export class GoalsController {
   }
 
   @ApiOperation({ summary: 'Find tasks by the chosen goal' })
-  @Get(':id/tasks')
-  findTasks(@Param('id') goalId: string, @CurrentUser() user: AuthUser) {
-    return this.goalsService.findTasks(goalId, user.id)
+  @Get(':id/dashboard')
+  findDashboard(@Param('id') goalId: string, @CurrentUser() user: AuthUser) {
+    return this.goalsService.findDashboard(goalId, user.id)
   }
 
   @ApiOperation({ summary: 'Find a goal by ID' })
